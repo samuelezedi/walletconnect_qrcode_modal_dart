@@ -139,13 +139,16 @@ class _TestPageState extends State<TestPage> {
   void _openWalletPage() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => WalletPage(connector: connector),
+        builder: (context) => WalletPage(
+          connector: connector,
+        ),
       ),
     );
   }
 
   VoidCallback? _transactionStateToAction(BuildContext context,
       {required ConnectionState state}) {
+    
     debugPrint('State: ${_transactionStateToString(state: state)}');
     switch (state) {
       // Progress, action disabled

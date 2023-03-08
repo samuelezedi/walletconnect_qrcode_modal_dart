@@ -63,11 +63,15 @@ class ModalWidget extends StatefulWidget {
     this.walletListBuilder,
     this.qrCodeBuilder,
     this.platformOverrides,
+    this.showSelector = true,
     Key? key,
   }) : super(key: key);
 
   /// WallectConnect URI
   final String uri;
+
+  /// By default set to true, which shows selector
+  final bool showSelector;
 
   /// Wallet callback (when wallet is selected)
   final WalletCallback? walletCallback;
@@ -116,6 +120,7 @@ class ModalWidget extends StatefulWidget {
     ModalWalletListBuilder? walletListBuilder,
     ModalQrCodeBuilder? qrCodeBuilder,
     ModalWalletPlatformOverrides? platformOverrides,
+    bool? showSelector,
     Key? key,
   }) =>
       ModalWidget(
@@ -131,6 +136,7 @@ class ModalWidget extends StatefulWidget {
         walletListBuilder: walletListBuilder ?? this.walletListBuilder,
         qrCodeBuilder: qrCodeBuilder ?? this.qrCodeBuilder,
         platformOverrides: platformOverrides ?? this.platformOverrides,
+        showSelector: showSelector ?? this.showSelector,
         key: key ?? this.key,
       );
 }
@@ -168,7 +174,7 @@ class _ModalWidgetState extends State<ModalWidget> {
               length: 2,
               child: Column(
                 children: [
-                  selectorWidget,
+                  if (widget.showSelector) selectorWidget,
                   Expanded(
                     child: _ModalContent(
                       groupValue: selectionIndex,

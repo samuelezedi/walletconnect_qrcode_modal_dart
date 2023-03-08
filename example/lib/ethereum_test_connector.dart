@@ -70,44 +70,45 @@ class EthereumTestConnector implements TestConnector {
       ),
 
       // UNCOMMENT below to make customizations, a few example customizations listed
-      // modalBuilder: (context, uri, callback, defaultModalWidget) {
-      //   return defaultModalWidget.copyWith(
-      //     platformOverrides: const ModalWalletPlatformOverrides(
-      //       android: ModalWalletType.listMobile,
-      //     ),
-      //     cardColor: Colors.pink,
-      //     cardShape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(16),
-      //     ),
-      //     selectorBuilder: (context, defaultSelectorWidget) =>
-      //         defaultSelectorWidget.copyWith(
-      //       backgroundColor: Colors.yellow,
-      //       padding: const EdgeInsets.all(16),
-      //       qrSegmentThumbBuilder: (context, defaultModalSegmentThumbWidget) {
-      //         return defaultModalSegmentThumbWidget.copyWith(
-      //             textAlign: TextAlign.right);
-      //       },
-      //     ),
-      //     walletButtonBuilder: (context, defaultWalletButtonWidget) =>
-      //         defaultWalletButtonWidget.copyWith(
-      //       buttonStyle: ElevatedButton.styleFrom(
-      //         backgroundColor: Colors.pink,
-      //       ),
-      //     ),
-      //     walletListBuilder: (context, defaultWalletListWidget) =>
-      //         defaultWalletListWidget.copyWith(
-      //       titleTextAlign: TextAlign.end,
-      //       rowBuilder: (context, wallet, imageUrl, defaultListRowWidget) =>
-      //           defaultListRowWidget.copyWith(imageHeight: 50),
-      //     ),
-      //     qrCodeBuilder: (context, defaultQrCodeWidget) =>
-      //         defaultQrCodeWidget.copyWith(
-      //       copyButtonStyle: TextButton.styleFrom(
-      //         backgroundColor: Colors.orange,
-      //       ),
-      //     ),
-      //   );
-      // },
+      modalBuilder: (context, uri, callback, defaultModalWidget) {
+        return defaultModalWidget.copyWith(
+          platformOverrides: const ModalWalletPlatformOverrides(
+            android: ModalWalletType.listMobile,
+          ),
+          showSelector: false,
+          // cardColor: Colors.pink,
+          // cardShape: RoundedRectangleBorder(
+          //   borderRadius: BorderRadius.circular(16),
+          // ),
+          selectorBuilder: (context, defaultSelectorWidget) =>
+              defaultSelectorWidget.copyWith(
+            backgroundColor: Colors.yellow,
+            padding: const EdgeInsets.all(16),
+            qrSegmentThumbBuilder: (context, defaultModalSegmentThumbWidget) {
+              return defaultModalSegmentThumbWidget.copyWith(
+                  textAlign: TextAlign.right);
+            },
+          ),
+          walletButtonBuilder: (context, defaultWalletButtonWidget) =>
+              defaultWalletButtonWidget.copyWith(
+            buttonStyle: ElevatedButton.styleFrom(
+              backgroundColor: Colors.pink,
+            ),
+          ),
+          // walletListBuilder: (context, defaultWalletListWidget) =>
+          //     defaultWalletListWidget.copyWith(
+          //   titleTextAlign: TextAlign.end,
+          //   rowBuilder: (context, wallet, imageUrl, defaultListRowWidget) =>
+          //       defaultListRowWidget.copyWith(imageHeight: 50),
+          // ),
+          qrCodeBuilder: (context, defaultQrCodeWidget) =>
+              defaultQrCodeWidget.copyWith(
+            copyButtonStyle: TextButton.styleFrom(
+              backgroundColor: Colors.orange,
+            ),
+          ),
+        );
+      },
     );
 
     _provider = EthereumWalletConnectProvider(_connector.connector);
