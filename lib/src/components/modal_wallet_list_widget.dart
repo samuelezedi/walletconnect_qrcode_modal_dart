@@ -12,18 +12,17 @@ typedef ModalWalletListRowBuilder = Widget Function(
   ModalWalletListRowWidget defaultListRowWidget,
 );
 
-class ModalWalletListWidget extends StatelessWidget {
-  const ModalWalletListWidget({
+class ModalWalletListWidget extends StatefulWidget {
+  ModalWalletListWidget({
     required this.url,
     required this.wallets,
     this.walletCallback,
-    this.title = 'Choose your preferred wallet',
-    this.titlePadding,
-    this.titleTextStyle,
     this.titleTextAlign,
     this.onWalletTap,
     this.rowBuilder,
     this.loadingWidget,
+    this.inputBorderColor,
+    this.showSearch = true,
     Key? key,
   }) : super(key: key);
 
@@ -39,15 +38,6 @@ class ModalWalletListWidget extends StatelessWidget {
   /// Callback when row (wallet) it tapped
   final Function(Wallet wallet, String url)? onWalletTap;
 
-  /// List title
-  final String title;
-
-  /// List title padding
-  final EdgeInsets? titlePadding;
-
-  /// List title text style
-  final TextStyle? titleTextStyle;
-
   /// List title text align
   final TextAlign? titleTextAlign;
 
@@ -57,57 +47,114 @@ class ModalWalletListWidget extends StatelessWidget {
   /// Loading widget when list is being populated
   final Widget? loadingWidget;
 
+  /// Color of search field border
+  final Color? inputBorderColor;
+
+  final bool showSearch;
+
+
+  @override
+  State<ModalWalletListWidget> createState() => _ModalWalletListWidgetState();
+}
+
+class _ModalWalletListWidgetState extends State<ModalWalletListWidget> {
+
+  var searched = <Wallet>[];
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: wallets,
+      future: widget.wallets,
       builder: (context, AsyncSnapshot<List<Wallet>> walletData) {
         if (walletData.hasData) {
           return Column(
             children: [
+              // Padding(
+              //   padding:
+              //       titlePadding ?? const EdgeInsets.only(top: 16, bottom: 8),
+              //   child: SizedBox(
+              //     width: double.infinity,
+              //     child: Text(
+              //       title,
+              //       textAlign: titleTextAlign ?? TextAlign.center,
+              //       style: titleTextStyle ??
+              //           Theme.of(context).textTheme.titleMedium?.copyWith(
+              //                 color: Colors.grey,
+              //               ),
+              //     ),
+              //   ),
+              // ),
               Padding(
-                padding:
-                    titlePadding ?? const EdgeInsets.only(top: 16, bottom: 8),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    title,
-                    textAlign: titleTextAlign ?? TextAlign.center,
-                    style: titleTextStyle ??
-                        Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.grey,
-                            ),
+                padding: const EdgeInsets.only(top: 16, bottom: 8),
+                child: TextFormField(
+                  onChanged: (value) {
+                    if (value.trim() == "") {}
+                  },
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: widget.inputBorderColor ?? Colors.blue,
+                      ),
+                    ),
+                    hintText: 'Search Wallet',
+                    prefixIcon: const Icon(Icons.search),
                   ),
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: walletData.data!.length,
-                    itemBuilder: (context, index) {
-                      final wallet = walletData.data![index];
-                      final defaultRow = ModalWalletListRowWidget(
-                          wallet: wallet,
-                          onWalletTap: (wallet) {
-                            walletCallback?.call(wallet);
-                            onWalletTap?.call(wallet, url);
-                          });
-                      if (rowBuilder != null) {
-                        return rowBuilder!.call(
-                          context,
-                          wallet,
-                          defaultRow.imageUrl,
-                          defaultRow,
-                        );
-                      }
+              if (searched.isEmpty)
+                Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: walletData.data!.length,
+                      itemBuilder: (context, index) {
+                        final wallet = walletData.data![index];
+                        final defaultRow = ModalWalletListRowWidget(
+                            wallet: wallet,
+                            onWalletTap: (wallet) {
+                              widget.walletCallback?.call(wallet);
+                              widget.onWalletTap?.call(wallet, widget.url);
+                            });
+                        if (widget.rowBuilder != null) {
+                          return widget.rowBuilder!.call(
+                            context,
+                            wallet,
+                            defaultRow.imageUrl,
+                            defaultRow,
+                          );
+                        }
 
-                      return defaultRow;
-                    }),
-              ),
+                        return defaultRow;
+                      }),
+                ),
+              if (searched.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: walletData.data!.length,
+                      itemBuilder: (context, index) {
+                        final wallet = walletData.data![index];
+                        final defaultRow = ModalWalletListRowWidget(
+                            wallet: wallet,
+                            onWalletTap: (wallet) {
+                              widget.walletCallback?.call(wallet);
+                              widget.onWalletTap?.call(wallet, widget.url);
+                            });
+                        if (widget.rowBuilder != null) {
+                          return widget.rowBuilder!.call(
+                            context,
+                            wallet,
+                            defaultRow.imageUrl,
+                            defaultRow,
+                          );
+                        }
+
+                        return defaultRow;
+                      }),
+                ),
             ],
           );
         } else {
-          return loadingWidget ??
+          return widget.loadingWidget ??
               const Center(
                 child: CircularProgressIndicator(
                   color: Colors.grey,
@@ -128,18 +175,19 @@ class ModalWalletListWidget extends StatelessWidget {
     TextAlign? titleTextAlign,
     ModalWalletListRowBuilder? rowBuilder,
     Widget? loadingWidget,
+    Color? inputBorderColor,
+    bool? showSearch,
   }) =>
       ModalWalletListWidget(
-        url: url ?? this.url,
-        wallets: wallets ?? this.wallets,
-        walletCallback: walletCallback ?? this.walletCallback,
-        onWalletTap: onWalletTap ?? this.onWalletTap,
-        title: title,
-        titlePadding: titlePadding ?? this.titlePadding,
-        titleTextStyle: titleTextStyle ?? this.titleTextStyle,
-        titleTextAlign: titleTextAlign ?? this.titleTextAlign,
-        rowBuilder: rowBuilder ?? this.rowBuilder,
-        loadingWidget: loadingWidget ?? this.loadingWidget,
+        url: url ?? widget.url,
+        wallets: wallets ?? widget.wallets,
+        walletCallback: walletCallback ?? widget.walletCallback,
+        onWalletTap: onWalletTap ?? widget.onWalletTap,
+        inputBorderColor: inputBorderColor ?? widget.inputBorderColor,
+        showSearch: showSearch ?? widget.showSearch,
+        titleTextAlign: titleTextAlign ?? widget.titleTextAlign,
+        rowBuilder: rowBuilder ?? widget.rowBuilder,
+        loadingWidget: loadingWidget ?? widget.loadingWidget,
       );
 }
 
