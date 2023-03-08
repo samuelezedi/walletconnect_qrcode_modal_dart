@@ -52,13 +52,11 @@ class ModalWalletListWidget extends StatefulWidget {
 
   final bool showSearch;
 
-
   @override
   State<ModalWalletListWidget> createState() => _ModalWalletListWidgetState();
 }
 
 class _ModalWalletListWidgetState extends State<ModalWalletListWidget> {
-
   var searched = <Wallet>[];
 
   @override
@@ -69,26 +67,22 @@ class _ModalWalletListWidgetState extends State<ModalWalletListWidget> {
         if (walletData.hasData) {
           return Column(
             children: [
-              // Padding(
-              //   padding:
-              //       titlePadding ?? const EdgeInsets.only(top: 16, bottom: 8),
-              //   child: SizedBox(
-              //     width: double.infinity,
-              //     child: Text(
-              //       title,
-              //       textAlign: titleTextAlign ?? TextAlign.center,
-              //       style: titleTextStyle ??
-              //           Theme.of(context).textTheme.titleMedium?.copyWith(
-              //                 color: Colors.grey,
-              //               ),
-              //     ),
-              //   ),
-              // ),
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),
                 child: TextFormField(
                   onChanged: (value) {
-                    if (value.trim() == "") {}
+                    searched.clear();
+                    if (value.trim() != "") {
+                      walletData.data!.map((element) {
+                        if (element.name.toLowerCase().contains(
+                            value.trim().toLowerCase())) {
+                          searched.add(element);
+                        }
+                      }).toList();
+                    } else {
+                      searched.clear();
+                    }
+                    setState(() {});
                   },
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -130,9 +124,9 @@ class _ModalWalletListWidgetState extends State<ModalWalletListWidget> {
                 Expanded(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: walletData.data!.length,
+                      itemCount: searched.length,
                       itemBuilder: (context, index) {
-                        final wallet = walletData.data![index];
+                        final wallet = searched[index];
                         final defaultRow = ModalWalletListRowWidget(
                             wallet: wallet,
                             onWalletTap: (wallet) {
