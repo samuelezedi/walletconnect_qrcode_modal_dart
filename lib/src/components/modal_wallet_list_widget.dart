@@ -13,7 +13,7 @@ typedef ModalWalletListRowBuilder = Widget Function(
 );
 
 class ModalWalletListWidget extends StatefulWidget {
-  ModalWalletListWidget({
+  const ModalWalletListWidget({
     required this.url,
     required this.wallets,
     this.walletCallback,

@@ -9,7 +9,7 @@ class WalletStore {
 
   Future<List<Wallet>> load() async {
     final walletFile = await DefaultCacheManager()
-        .getSingleFile('https://registry.walletconnect.org/data/wallets.json');
+        .getSingleFile('wallets.json');
     final walletData = json.decode(await walletFile.readAsString());
 
     return walletData.entries
