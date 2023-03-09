@@ -66,85 +66,84 @@ class _ModalWalletListWidgetState extends State<ModalWalletListWidget> {
       builder: (context, AsyncSnapshot<List<Wallet>> walletData) {
         if (walletData.hasData) {
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                child: TextFormField(
-                  onChanged: (value) {
-                    searched.clear();
-                    if (value.trim() != "") {
-                      walletData.data!.map((element) {
-                        if (element.name.toLowerCase().contains(
-                            value.trim().toLowerCase())) {
-                          searched.add(element);
-                        }
-                      }).toList();
-                    } else {
+              if (1 == 2)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  child: TextFormField(
+                    onChanged: (value) {
                       searched.clear();
-                    }
-                    setState(() {});
-                  },
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: widget.inputBorderColor ?? Colors.blue,
+                      if (value.trim() != "") {
+                        walletData.data!.map((element) {
+                          if (element.name
+                              .toLowerCase()
+                              .contains(value.trim().toLowerCase())) {
+                            searched.add(element);
+                          }
+                        }).toList();
+                      } else {
+                        searched.clear();
+                      }
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: widget.inputBorderColor ?? Colors.blue,
+                        ),
                       ),
+                      hintText: 'Search Wallet',
+                      prefixIcon: const Icon(Icons.search),
                     ),
-                    hintText: 'Search Wallet',
-                    prefixIcon: const Icon(Icons.search),
                   ),
                 ),
-              ),
               if (searched.isEmpty)
-                Expanded(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: walletData.data!.length,
-                      itemBuilder: (context, index) {
-                        final wallet = walletData.data![index];
-                        final defaultRow = ModalWalletListRowWidget(
-                            wallet: wallet,
-                            onWalletTap: (wallet) {
-                              widget.walletCallback?.call(wallet);
-                              widget.onWalletTap?.call(wallet, widget.url);
-                            });
-                        if (widget.rowBuilder != null) {
-                          return widget.rowBuilder!.call(
-                            context,
-                            wallet,
-                            defaultRow.imageUrl,
-                            defaultRow,
-                          );
-                        }
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: walletData.data!.length,
+                    itemBuilder: (context, index) {
+                      final wallet = walletData.data![index];
+                      final defaultRow = ModalWalletListRowWidget(
+                          wallet: wallet,
+                          onWalletTap: (wallet) {
+                            widget.walletCallback?.call(wallet);
+                            widget.onWalletTap?.call(wallet, widget.url);
+                          });
+                      if (widget.rowBuilder != null) {
+                        return widget.rowBuilder!.call(
+                          context,
+                          wallet,
+                          defaultRow.imageUrl,
+                          defaultRow,
+                        );
+                      }
 
-                        return defaultRow;
-                      }),
-                ),
+                      return defaultRow;
+                    }),
               if (searched.isNotEmpty)
-                Expanded(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: searched.length,
-                      itemBuilder: (context, index) {
-                        final wallet = searched[index];
-                        final defaultRow = ModalWalletListRowWidget(
-                            wallet: wallet,
-                            onWalletTap: (wallet) {
-                              widget.walletCallback?.call(wallet);
-                              widget.onWalletTap?.call(wallet, widget.url);
-                            });
-                        if (widget.rowBuilder != null) {
-                          return widget.rowBuilder!.call(
-                            context,
-                            wallet,
-                            defaultRow.imageUrl,
-                            defaultRow,
-                          );
-                        }
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: searched.length,
+                    itemBuilder: (context, index) {
+                      final wallet = searched[index];
+                      final defaultRow = ModalWalletListRowWidget(
+                          wallet: wallet,
+                          onWalletTap: (wallet) {
+                            widget.walletCallback?.call(wallet);
+                            widget.onWalletTap?.call(wallet, widget.url);
+                          });
+                      if (widget.rowBuilder != null) {
+                        return widget.rowBuilder!.call(
+                          context,
+                          wallet,
+                          defaultRow.imageUrl,
+                          defaultRow,
+                        );
+                      }
 
-                        return defaultRow;
-                      }),
-                ),
+                      return defaultRow;
+                    }),
             ],
           );
         } else {

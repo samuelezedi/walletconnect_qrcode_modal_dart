@@ -163,8 +163,6 @@ class _ModalWidgetState extends State<ModalWidget> {
     return Center(
       child: SizedBox(
         width: widget.width ?? MediaQuery.of(context).size.width * 0.9,
-        height:
-            widget.height ?? max(500, MediaQuery.of(context).size.height * 0.5),
         child: Card(
           color: widget.cardColor,
           shape: widget.cardShape,
@@ -173,18 +171,17 @@ class _ModalWidgetState extends State<ModalWidget> {
             child: DefaultTabController(
               length: 2,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if (widget.showSelector) selectorWidget,
-                  Expanded(
-                    child: _ModalContent(
-                      groupValue: selectionIndex,
-                      walletCallback: widget.walletCallback,
-                      uri: widget.uri,
-                      walletButtonBuilder: widget.walletButtonBuilder,
-                      walletListBuilder: widget.walletListBuilder,
-                      qrCodeBuilder: widget.qrCodeBuilder,
-                      platformOverrides: widget.platformOverrides,
-                    ),
+                  _ModalContent(
+                    groupValue: selectionIndex,
+                    walletCallback: widget.walletCallback,
+                    uri: widget.uri,
+                    walletButtonBuilder: widget.walletButtonBuilder,
+                    walletListBuilder: widget.walletListBuilder,
+                    qrCodeBuilder: widget.qrCodeBuilder,
+                    platformOverrides: widget.platformOverrides,
                   ),
                 ],
               ),
