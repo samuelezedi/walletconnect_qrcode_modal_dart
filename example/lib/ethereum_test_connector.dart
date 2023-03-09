@@ -7,6 +7,8 @@ import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:walletconnect_qrcode_modal_dart/walletconnect_qrcode_modal_dart.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
+import 'package:walletconnect_qrcode_modal_dart/src/extension/walletconnect_ext.dart';
+import 'package:walletconnect_qrcode_modal_dart/src/models/wallet.dart' as w;
 
 class WalletConnectEthereumCredentials extends CustomTransactionSender {
   WalletConnectEthereumCredentials({required this.provider});
@@ -54,6 +56,10 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
 }
 
 class EthereumTestConnector implements TestConnector {
+  // void setWallet(w.Wallet wallet) {
+  //   _connector.connector.putSelectedWallet(wallet);
+  // }
+
   EthereumTestConnector() {
     _connector = WalletConnectQrCodeModal(
       connector: WalletConnect(
@@ -70,7 +76,7 @@ class EthereumTestConnector implements TestConnector {
       ),
 
       // UNCOMMENT below to make customizations, a few example customizations listed
-      modalBuilder: (context, uri, callback, defaultModalWidget) {
+      modalBuilder: (context, uri, setWallet, defaultModalWidget) {
         return defaultModalWidget.copyWith(
           platformOverrides: const ModalWalletPlatformOverrides(
             android: ModalWalletType.listMobile,
@@ -95,12 +101,13 @@ class EthereumTestConnector implements TestConnector {
               backgroundColor: Colors.pink,
             ),
           ),
-          // walletListBuilder: (context, defaultWalletListWidget) =>
-          //     defaultWalletListWidget.copyWith(
-          //   titleTextAlign: TextAlign.end,
-          //   rowBuilder: (context, wallet, imageUrl, defaultListRowWidget) =>
-          //       defaultListRowWidget.copyWith(imageHeight: 50),
-          // ),
+          walletListBuilder: (context, defaultWalletListWidget) =>
+              defaultWalletListWidget.copyWith(rowBuilder:
+                  (context, wallet, imageUrl, defaultListRowWidget) {
+            // print(wallet);
+            _connector.connector.putSelectedWallet(wallet);
+            return defaultListRowWidget.copyWith(imageHeight: 50);
+          }),
           qrCodeBuilder: (context, defaultQrCodeWidget) =>
               defaultQrCodeWidget.copyWith(
             copyButtonStyle: TextButton.styleFrom(
@@ -110,7 +117,7 @@ class EthereumTestConnector implements TestConnector {
         );
       },
     );
-
+    
     _provider = EthereumWalletConnectProvider(_connector.connector);
   }
 

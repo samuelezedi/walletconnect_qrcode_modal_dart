@@ -29,6 +29,10 @@ class Wallet {
 
   factory Wallet.fromJson(Map<String, dynamic> json) => _$WalletFromJson(json);
   Map<String, dynamic> toJson() => _$WalletToJson(this);
+
+  @override
+  String toString() =>
+      "Wallet(id: $id, name: $id, desc: $description, homepage: $homepage, chains: $chains, app: $app, mobile: $mobile, desktop: $desktop, metadata: $metadata)";
 }
 
 @JsonSerializable()
